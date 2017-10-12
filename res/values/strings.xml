@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">艾米音乐</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="face_activity_title">让世界更美好</string>
+   	<string name="exist_music">本地音乐</string>
+   	<string name="internet_music">在线音乐</string>
+
+</resources>
