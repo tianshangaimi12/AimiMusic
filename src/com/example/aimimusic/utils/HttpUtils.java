@@ -1,4 +1,4 @@
-package com.example.aimimusic.http;
+package com.example.aimimusic.utils;
 
 public class HttpUtils {
 	

@@ -9,13 +9,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.example.aimimusic.ItemClickListener;
 import com.example.aimimusic.MusicApplication;
+import com.example.aimimusic.MusicListActivity;
 import com.example.aimimusic.R;
 import com.example.aimimusic.element.Song;
 import com.example.aimimusic.element.SongList;
-import com.example.aimimusic.http.HttpUtils;
+import com.example.aimimusic.utils.HttpUtils;
 import com.google.gson.Gson;
 
+import android.R.anim;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -27,6 +32,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -48,6 +55,9 @@ public class InternetMusicFragment extends Fragment{
 	private int songListNum;
 	
 	private RecyclerView mMusicList;
+	private LinearLayout mLoadingLayout;
+	private ImageView mLoadingImg;
+	private AnimationDrawable anim;
 	
 	private final String TAG = "InternetMusicFragment";
 	private final int SONG_SIZE = 20;
@@ -81,6 +91,8 @@ public class InternetMusicFragment extends Fragment{
 				}
 				adapter.notifyDataSetChanged();
 				mMusicList.setAdapter(adapter);
+				anim.stop();
+				mLoadingLayout.setVisibility(View.GONE);
 			}
 		};
 	};
@@ -97,6 +109,15 @@ public class InternetMusicFragment extends Fragment{
 		songLists = new ArrayList<SongList>();
 		songListNum = 0;
 		adapter = new MusicTypeAdapter(getActivity(), songLists);
+		adapter.setClickListener(new ItemClickListener() {
+			
+			@Override
+			public void onclick(View view, int position) {
+				Intent intent = new Intent(getActivity(), MusicListActivity.class);
+				intent.putExtra("songlist", songLists.get(position));
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override
@@ -104,6 +125,10 @@ public class InternetMusicFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_internet_music, container,false);
+		mLoadingLayout = (LinearLayout)view.findViewById(R.id.ll_loading);
+		mLoadingImg = (ImageView)view.findViewById(R.id.img_ic_loading);
+		anim = (AnimationDrawable) mLoadingImg.getBackground();
+		anim.start();
 		mMusicList = (RecyclerView)view.findViewById(R.id.list_internet_musiclist);
 		mMusicList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		for(int i : SONG_TYPES)

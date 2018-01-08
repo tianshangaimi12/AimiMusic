@@ -8,4 +8,5 @@
    	<string name="internet_music">在线音乐</string>
 	<string name="main_music_list">主打榜单</string>
 	<string name="kind_music_list">分类榜单</string>
+	<string name="music_loading">音乐马上来</string>
 </resources>

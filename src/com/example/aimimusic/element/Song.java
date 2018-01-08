@@ -1,16 +1,35 @@
 package com.example.aimimusic.element;
 
+import java.io.Serializable;
 
-public class Song {
+
+public class Song implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -435440040679697091L;
 	private String song_id;
 	private String title;
 	private String pic_small;
 	private String pic_radio;
-	private String author;
 	private String artist_name;
 	private String artist_id;
 	private String publishtime;
+	private String playUrl;
+	private int file_duration;
+	public int getFile_duration() {
+		return file_duration;
+	}
+	public void setFile_duration(int file_duration) {
+		this.file_duration = file_duration;
+	}
+	public String getPlayUrl() {
+		return playUrl;
+	}
+	public void setPlayUrl(String playUrl) {
+		this.playUrl = playUrl;
+	}
 	public String getArtist_id() {
 		return artist_id;
 	}
@@ -54,12 +73,6 @@ public class Song {
 	}
 	public void setPic_radio(String pic_radio) {
 		this.pic_radio = pic_radio;
-	}
-	public String getAuthor() {
-		return author;
-	}
-	public void setAuthor(String author) {
-		this.author = author;
 	}
 	public String getArtist_name() {
 		return artist_name;

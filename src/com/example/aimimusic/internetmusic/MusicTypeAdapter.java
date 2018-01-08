@@ -2,10 +2,12 @@ package com.example.aimimusic.internetmusic;
 
 import java.util.List;
 
+import com.example.aimimusic.ItemClickListener;
 import com.example.aimimusic.R;
 import com.example.aimimusic.R.id;
 import com.example.aimimusic.element.SongList;
 import com.example.aimimusic.element.BillBoard;
+import com.example.aimimusic.utils.ImgUtils;
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ public class MusicTypeAdapter extends RecyclerView.Adapter{
 	
 	private Context context;
 	private List<SongList> songLists;
+	private ItemClickListener listener;
 	
 	private final int TYPE_TITLE = 1;
 	private final int TYPE_MUSIC = 2;
@@ -61,17 +65,28 @@ public class MusicTypeAdapter extends RecyclerView.Adapter{
 			{
 				position = arg1 -2 ;
 			}
+			final int num = position;
 			SongList songList = songLists.get(position);
 			BillBoard billBoard = songList.getBillboard();
 			MusicViewHolder viewHolder = (MusicViewHolder) arg0;
 			Picasso.with(context)
 			.load(billBoard.getPic_s192())
 			.placeholder(R.drawable.default_cover)
-			.resize(dp2pix(context, 100), dp2pix(context, 100))
+			.resize(ImgUtils.dp2pix(context, 100), ImgUtils.dp2pix(context, 100))
 			.into(viewHolder.imageView);
 			viewHolder.txtOneMusic.setText("1."+songList.getSong_list().get(0).getTitle()+"-"+songList.getSong_list().get(0).getArtist_name());
 			viewHolder.txtTwoMusic.setText("2."+songList.getSong_list().get(1).getTitle());
 			viewHolder.txtThreeMusic.setText("3."+songList.getSong_list().get(2).getTitle());
+			viewHolder.itemView.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(listener != null)
+					{
+						listener.onclick(v, num);
+					}
+				}
+			});
 		}
 	}
 
@@ -119,9 +134,9 @@ public class MusicTypeAdapter extends RecyclerView.Adapter{
 		
 	}
 
-	public static int dp2pix(Context context, float dpValue)
+	
+	public void setClickListener(ItemClickListener listener)
 	{
-		float scale = context.getResources().getDisplayMetrics().density;
-		return (int) (scale*dpValue+0.5f);
+		this.listener = listener;
 	}
 }

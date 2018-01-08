@@ -3,7 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    
+<LinearLayout 
+    android:id="@+id/ll_loading"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageView 
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:id="@+id/img_ic_loading"
+        android:layout_width="20dp"
+    	android:layout_height="20dp"
+    	android:background="@drawable/ic_loading"/>
+    <TextView 
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:textSize="15sp"
+    	android:layout_gravity="center_horizontal"
+    	android:text="@string/music_loading"/>
+</LinearLayout>
 <android.support.v7.widget.RecyclerView
     android:id="@+id/list_internet_musiclist"
     android:layout_width="match_parent"

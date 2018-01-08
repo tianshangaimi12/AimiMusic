@@ -1,9 +1,22 @@
 package com.example.aimimusic.element;
 
-public class BillBoard
+import java.io.Serializable;
+
+public class BillBoard implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1665137868072611580L;
 	private String name;
 	private String pic_s192;
+	private String pic_s260;
+	public String getPic_s260() {
+		return pic_s260;
+	}
+	public void setPic_s260(String pic_s260) {
+		this.pic_s260 = pic_s260;
+	}
 	private String comment;
 	private String update_date;
 	public String getComment() {

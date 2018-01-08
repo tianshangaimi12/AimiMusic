@@ -1,8 +1,13 @@
 package com.example.aimimusic.element;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SongList {
+public class SongList implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8304205766465453665L;
 	private int error_code;
 	private BillBoard billboard;
 	private List<Song> song_list;
