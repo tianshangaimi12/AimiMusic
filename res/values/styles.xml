@@ -8,7 +8,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
          <!-- Actionbar color -->
- 		 <item name="colorPrimary">#f00</item>
+ 		 <item name="colorPrimary">#d32</item>
  		 <!--Status bar color-->
  		 <item name="colorPrimaryDark">#d32</item>
   		<!--Window color-->

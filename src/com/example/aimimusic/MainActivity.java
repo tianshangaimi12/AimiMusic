@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.aimimusic.element.FragmentAdapter;
+import com.example.aimimusic.existmusic.ExsitMusicFragment;
+import com.example.aimimusic.internetmusic.InternetMusicFragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
          mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout_main);
          mToolbar.setTitle("");
          setSupportActionBar(mToolbar);
-         mToolbar.setNavigationIcon(R.drawable.menu);
+         mToolbar.setNavigationIcon(R.drawable.ic_menu);
          mToolbar.setNavigationOnClickListener(new OnClickListener() {
 			
 			@Override

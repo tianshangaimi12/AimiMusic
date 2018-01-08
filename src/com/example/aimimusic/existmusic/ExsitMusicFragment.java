@@ -1,4 +1,6 @@
-package com.example.aimimusic;
+package com.example.aimimusic.existmusic;
+
+import com.example.aimimusic.R;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -6,5 +6,6 @@
     <string name="face_activity_title">让世界更美好</string>
    	<string name="exist_music">本地音乐</string>
    	<string name="internet_music">在线音乐</string>
-
+	<string name="main_music_list">主打榜单</string>
+	<string name="kind_music_list">分类榜单</string>
 </resources>
