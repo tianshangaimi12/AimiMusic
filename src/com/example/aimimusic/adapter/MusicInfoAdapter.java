@@ -1,5 +1,7 @@
-package com.example.aimimusic;
+package com.example.aimimusic.adapter;
 
+import com.example.aimimusic.ItemClickListener;
+import com.example.aimimusic.R;
 import com.example.aimimusic.element.BillBoard;
 import com.example.aimimusic.element.Song;
 import com.example.aimimusic.element.SongList;
@@ -19,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ public class MusicInfoAdapter extends RecyclerView.Adapter{
 	private Context context;
 	private SongList songList;
 	private boolean onLineList;
+	private ItemClickListener listener;
 	
 	private final int TYPE_TITLE = 1;
 	private final int TYPE_MUSIC = 2;
@@ -68,12 +72,23 @@ public class MusicInfoAdapter extends RecyclerView.Adapter{
 			MusicInfoHolder holder = (MusicInfoHolder) arg0;
 			if(onLineList)
 				arg1 = arg1-1;
+			final int position = arg1;
 			Song song = songList.getSong_list().get(arg1);
 			Picasso.with(context).load(song.getPic_small())
 			.resize(ImgUtils.dp2pix(context, 50), ImgUtils.dp2pix(context, 50))
 			.into(holder.imgMusic);
 			holder.txtTitle.setText(song.getTitle());
 			holder.txtInfo.setText(song.getArtist_name()+"-"+song.getAlbum_title());
+			holder.itemView.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(listener != null)
+					{
+						listener.onclick(v, position);
+					}
+				}
+			});
 		}
 		else if(arg0 instanceof OnlineTitleHolder)
 		{
@@ -146,6 +161,11 @@ public class MusicInfoAdapter extends RecyclerView.Adapter{
 			txtListInfo = (TextView)arg0.findViewById(R.id.txt_music_list_back_info);
 		}
 		
+	}
+	
+	public void setItemClickListener(ItemClickListener listener)
+	{
+		this.listener = listener;
 	}
 
 }

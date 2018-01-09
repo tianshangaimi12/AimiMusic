@@ -12,7 +12,9 @@ import com.android.volley.toolbox.JsonRequest;
 import com.example.aimimusic.ItemClickListener;
 import com.example.aimimusic.MusicApplication;
 import com.example.aimimusic.MusicListActivity;
+import com.example.aimimusic.MusicPlayService;
 import com.example.aimimusic.R;
+import com.example.aimimusic.adapter.MusicTypeAdapter;
 import com.example.aimimusic.element.Song;
 import com.example.aimimusic.element.SongList;
 import com.example.aimimusic.utils.HttpUtils;
@@ -113,6 +115,9 @@ public class InternetMusicFragment extends Fragment{
 			
 			@Override
 			public void onclick(View view, int position) {
+				Intent serviceIntent = new Intent(getActivity(),MusicPlayService.class);
+				serviceIntent.putExtra("songlist", songLists.get(position));
+				getActivity().startService(serviceIntent);
 				Intent intent = new Intent(getActivity(), MusicListActivity.class);
 				intent.putExtra("songlist", songLists.get(position));
 				startActivity(intent);

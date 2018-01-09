@@ -3,7 +3,7 @@ package com.example.aimimusic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.aimimusic.element.FragmentAdapter;
+import com.example.aimimusic.adapter.FragmentAdapter;
 import com.example.aimimusic.existmusic.ExsitMusicFragment;
 import com.example.aimimusic.internetmusic.InternetMusicFragment;
 

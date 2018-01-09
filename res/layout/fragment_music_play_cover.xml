@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:background="#dddddd" />
+
+    <ImageView
+        android:id="@+id/img_play_music_cover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/play_page_default_cover" />
+
+    <ImageView
+        android:id="@+id/img_play_music_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/play_page_disc" />
+    <ImageView
+        android:id="@+id/img_play_music_bar"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/play_page_needle" />
+    <TextView 
+        android:id="@+id/txt_play_music_single_lrc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

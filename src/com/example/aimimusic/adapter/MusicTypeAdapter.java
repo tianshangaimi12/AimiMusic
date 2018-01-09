@@ -1,4 +1,4 @@
-package com.example.aimimusic.internetmusic;
+package com.example.aimimusic.adapter;
 
 import java.util.List;
 

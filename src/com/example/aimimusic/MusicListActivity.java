@@ -1,5 +1,6 @@
 package com.example.aimimusic;
 
+import com.example.aimimusic.adapter.MusicInfoAdapter;
 import com.example.aimimusic.element.SongList;
 
 import android.app.Activity;
@@ -32,7 +33,7 @@ public class MusicListActivity extends Activity{
 	public void init()
 	{
 		Intent intent = getIntent();
-		SongList songList = (SongList) intent.getSerializableExtra("songlist");
+		final SongList songList = (SongList) intent.getSerializableExtra("songlist");
 		mToolbar = (Toolbar)findViewById(R.id.toolbar_music_list);
 		mToolbar.setNavigationIcon(R.drawable.ic_back);
 		mToolbar.setNavigationOnClickListener(new OnClickListener() {
@@ -47,6 +48,15 @@ public class MusicListActivity extends Activity{
 		mRecyclerView = (RecyclerView)findViewById(R.id.list_music_list);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		adapter = new MusicInfoAdapter(this, songList,true);
+		adapter.setItemClickListener(new ItemClickListener() {
+			
+			@Override
+			public void onclick(View view, int position) {
+				Intent intent = new Intent(MusicListActivity.this, PlayMusicActivity.class);
+				intent.putExtra("song", songList.getSong_list().get(position));
+				startActivity(intent);
+			}
+		});
 		mRecyclerView.setAdapter(adapter);
 	}
 
