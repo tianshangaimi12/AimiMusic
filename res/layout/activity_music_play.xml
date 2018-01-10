@@ -42,7 +42,8 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_below="@id/vp_play_music"
-	    android:layout_centerHorizontal="true">
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="10dp">
 	    <ImageView 
 	        android:id="@+id/img_first_index"
 	        android:src="@drawable/ic_white_index"
@@ -56,6 +57,7 @@
 	        android:layout_marginLeft="5dp"/>
 	</LinearLayout>
 	<LinearLayout 
+	    android:id="@+id/ll_sb_progress"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_below="@id/ll_index"
@@ -81,9 +83,11 @@
 	        android:textColor="#ffffff"/>
 	</LinearLayout>
 	<RelativeLayout 
+	    android:layout_below="@id/ll_sb_progress"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true">
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginTop="5dp" >
 	    <ImageView 
 	        android:id="@+id/img_play_music_mode"
 	        android:layout_width="wrap_content"

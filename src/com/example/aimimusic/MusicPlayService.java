@@ -97,6 +97,9 @@ public class MusicPlayService extends Service{
 					if(mediaPlayer != null && musicPlaySwitch == SWITCH_PAUSE)
 					{
 						mediaPlayer.start();
+						Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+						aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_RESUME);
+						sendBroadcast(aIntent);
 					}
 				}
 			}
@@ -107,6 +110,9 @@ public class MusicPlayService extends Service{
 					mediaPlayer.pause();
 					musicPlaySwitch = SWITCH_PAUSE;
 				}
+				Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+				aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PAUSE);
+				sendBroadcast(aIntent);
 			}
 		}
 		
@@ -152,6 +158,9 @@ public class MusicPlayService extends Service{
 						}
 						mediaPlayer.start();
 						musicPlaySwitch = SWITCH_PLAY;
+						Intent intent = new Intent(BroadCastUtils.SERVICE_CMD);
+						intent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PLAY);
+						sendBroadcast(intent);
 					}
 			
 				},

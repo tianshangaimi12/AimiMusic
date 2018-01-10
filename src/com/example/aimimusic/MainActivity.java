@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     	fragments = new ArrayList<Fragment>();
     	exsitMusicFragment = new ExsitMusicFragment();
     	internetMusicFragment = new InternetMusicFragment();
-    	fragments.add(exsitMusicFragment);
     	fragments.add(internetMusicFragment);
+    	fragments.add(exsitMusicFragment);
     }
     
     public void initView()
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         mTextViewExist = (TextView)findViewById(R.id.txt_exist_music);
         mTextViewExist.setOnClickListener(this);
         mTextViewInternet = (TextView)findViewById(R.id.txt_internet_music);
-        mTextViewInternet.setTextColor(Color.GRAY);
+        mTextViewExist.setTextColor(Color.parseColor("#aaaaaa"));
         mTextViewInternet.setOnClickListener(this);
         mViewPager = (ViewPager)findViewById(R.id.viewpager_main);
         mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
@@ -91,12 +91,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 			public void onPageSelected(int arg0) {
 				if(arg0 == 0)
 				{
-					mTextViewExist.setTextColor(Color.WHITE);
-					mTextViewInternet.setTextColor(Color.GRAY);
+					mTextViewInternet.setTextColor(Color.WHITE);
+					mTextViewExist.setTextColor(Color.parseColor("#aaaaaa"));
 				}
 				else {
-					mTextViewExist.setTextColor(Color.GRAY);
-					mTextViewInternet.setTextColor(Color.WHITE);
+					mTextViewInternet.setTextColor(Color.parseColor("#aaaaaa"));
+					mTextViewExist.setTextColor(Color.WHITE);
 				}
 			}
 			
@@ -125,10 +125,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     public void onClick(View v) {
     	switch (v.getId()) {
 		case R.id.txt_exist_music:
-			mViewPager.setCurrentItem(0);
+			mViewPager.setCurrentItem(1);
 			break;
 		case R.id.txt_internet_music:
-			mViewPager.setCurrentItem(1);
+			mViewPager.setCurrentItem(0);
 			break;
 		default:
 			break;

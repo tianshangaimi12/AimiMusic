@@ -18,20 +18,20 @@
             android:background="?attr/colorPrimary" >
 
             <TextView
-                android:id="@+id/txt_exist_music"
+                android:id="@+id/txt_internet_music"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="@string/exist_music"
+                android:text="@string/internet_music"
                 android:textColor="#fff"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/txt_internet_music"
+                android:id="@+id/txt_exist_music"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:text="@string/internet_music"
+                android:text="@string/exist_music"
                 android:textColor="#fff"
                 android:textSize="18sp" />
         </android.support.v7.widget.Toolbar>

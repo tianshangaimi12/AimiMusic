@@ -12,8 +12,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.aimimusic.adapter.MusicLrcAdapter;
 import com.example.aimimusic.element.Lrc;
 import com.example.aimimusic.element.Song;
+import com.example.aimimusic.utils.BroadCastUtils;
 import com.example.aimimusic.utils.HttpUtils;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,6 +34,7 @@ public class MusicLrcFragment extends Fragment{
 	private Song song;
 	private List<Lrc> lineLrcs;
 	private MusicLrcAdapter adapter;
+	private Receiver receiver;
 	
 	private RecyclerView mRecyclerView;
 	
@@ -37,6 +43,23 @@ public class MusicLrcFragment extends Fragment{
 	public MusicLrcFragment(Song song)
 	{
 		this.song = song;
+	}
+	
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		IntentFilter intentFilter = new IntentFilter(BroadCastUtils.SERVICE_CMD);
+		receiver = new Receiver();
+		getActivity().registerReceiver(receiver, intentFilter);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(receiver != null)
+		{
+			getActivity().unregisterReceiver(receiver);
+		}
 	}
 	
 	@Override
@@ -98,5 +121,23 @@ public class MusicLrcFragment extends Fragment{
 		}
 		adapter = new MusicLrcAdapter(getActivity(), lineLrcs);
 		mRecyclerView.setAdapter(adapter);
+	}
+	
+	private class Receiver extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int cmd = intent.getIntExtra(BroadCastUtils.CMD, 0);
+			if(cmd == BroadCastUtils.CMD_PLAY)
+			{
+				
+			}
+			else if(cmd == BroadCastUtils.CMD_RESUME)
+			{
+				
+			}
+		}
+		
 	}
 }

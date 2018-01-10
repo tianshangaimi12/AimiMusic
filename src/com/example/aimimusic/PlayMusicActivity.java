@@ -2,12 +2,19 @@ package com.example.aimimusic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.example.aimimusic.adapter.FragmentAdapter;
+import com.example.aimimusic.element.Lrc;
 import com.example.aimimusic.element.Song;
 import com.example.aimimusic.utils.BroadCastUtils;
+import com.example.aimimusic.utils.ImgUtils;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +34,9 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	private FragmentAdapter adapter;
 	private List<Fragment> fragments;
 	private int switchType;
+	private Receiver receiver;
+	private Timer timer;
+	private int time;
 	
 	private ViewPager mPager;
 	private ImageButton mImgClose;
@@ -51,6 +61,18 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		setContentView(R.layout.activity_music_play);
 		initData();
 		initView();
+		IntentFilter intentFilter = new IntentFilter(BroadCastUtils.SERVICE_CMD);
+		receiver = new Receiver();
+		registerReceiver(receiver, intentFilter);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(receiver != null)
+		{
+			unregisterReceiver(receiver);
+		}
 	}
 	
 	public void initData()
@@ -79,11 +101,13 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		mTxtArtist = (TextView)findViewById(R.id.txt_play_music_artist);
 		mTxtArtist.setText(song.getArtist_name());
 		mTxtStart = (TextView)findViewById(R.id.txt_play_music_start);
-		mTxtStart.setText(getMusicTime(0));
+		mTxtStart.setText(ImgUtils.getMusicTime(0));
 		mTxtEnd = (TextView)findViewById(R.id.txt_play_music_end);
-		mTxtEnd.setText(getMusicTime(song.getFile_duration()));
+		mTxtEnd.setText(ImgUtils.getMusicTime(song.getFile_duration()));
 		mImgSwitch = (ImageView)findViewById(R.id.img_play_music_switch);
 		mImgSwitch.setOnClickListener(this);
+		mSeekBarProgress = (SeekBar)findViewById(R.id.sb_paly_music_progress);
+		mSeekBarProgress.setMax(song.getFile_duration());
 		mPager.addOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -135,21 +159,6 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		}
 	}
 
-	public String getMusicTime(int duration)
-	{
-		String time = "";
-		if(duration == 0)
-		{
-			time = "00:00";
-		}
-		else
-		{
-			int minute = duration/60;
-			int second = duration%60;	
-			time = "0"+minute+":"+(second<10 ? "0"+second : second+"");
-		}
-		return time;	
-	}
 	
 	public void sendControll(int cmdType, int songId)
 	{
@@ -160,6 +169,51 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 			intent.putExtra(BroadCastUtils.CMD_SONGID, songId);
 		}
 		sendBroadcast(intent);
+	}
+	
+	private class Receiver extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int cmd = intent.getIntExtra(BroadCastUtils.CMD, 0);
+			if(cmd == BroadCastUtils.CMD_PLAY)
+			{
+				time = 0;
+				startTimer();
+			}
+			else if(cmd == BroadCastUtils.CMD_RESUME)
+			{
+				startTimer();
+			}
+			else if(cmd == BroadCastUtils.CMD_PAUSE)
+			{
+				timer.cancel();
+			}
+				
+		}
+		
+	}
+	
+	public void startTimer()
+	{
+		timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				time++;
+				PlayMusicActivity.this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						mSeekBarProgress.setProgress(time);
+						mTxtStart.setText(ImgUtils.getMusicTime(time));
+					}
+				});
+				
+			}
+		}, 0, 1000);
 	}
 	
 }
