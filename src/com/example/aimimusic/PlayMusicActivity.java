@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -40,6 +41,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	private int time;
 	private int playMode;
 	private Toast toast;
+	private boolean progressBarDraged;
 	
 	private ViewPager mPager;
 	private ImageButton mImgClose;
@@ -60,6 +62,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	private final int TYPE_SINGLE = 3;
 	private final int SWITCH_PLAY = 1;
 	private final int SWITCH_PAUSE = 2;
+	private final String TAG = "PlayMusicActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		adapter = new FragmentAdapter(getSupportFragmentManager(), fragments);
 		switchType = SWITCH_PAUSE;
 		playMode = TYPE_CIRCLE;
+		progressBarDraged = false;
 	}
 	
 	public void initView()
@@ -124,20 +128,26 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		mSeekBarProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				progressBarDraged = true;
 			}
 			
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				progressBarDraged = false;
 			}
+			
 			
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				Intent intent = new Intent(BroadCastUtils.MUSIC_SERVICE);
-				intent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_PROGRESS);
-				intent.putExtra(BroadCastUtils.CMD_SONG_PROGRESS, progress);
-//				sendBroadcast(intent);
+				if(progressBarDraged == true)
+				{
+					Intent intent = new Intent(BroadCastUtils.MUSIC_SERVICE);
+					intent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_PROGRESS);
+					intent.putExtra(BroadCastUtils.CMD_SONG_PROGRESS, progress);
+					sendBroadcast(intent);
+				}
 			}
 		});
 		mPager.addOnPageChangeListener(new OnPageChangeListener() {
@@ -269,6 +279,13 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 					timer.cancel();
 				}
 			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_PROGRESS)
+			{
+				int progress = intent.getIntExtra(BroadCastUtils.CMD_SONG_PROGRESS, 0);
+				time = progress;
+				mSeekBarProgress.setProgress(time);
+				Log.d(TAG, "change progress:"+progress);
+			}
 				
 		}
 		
@@ -303,7 +320,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	{
 		if(toast == null)
 		{
-			toast = toast.makeText(this, text, Toast.LENGTH_LONG);
+			toast = Toast.makeText(this, text, Toast.LENGTH_LONG);
 		}
 		else {
 			toast.setText(text);

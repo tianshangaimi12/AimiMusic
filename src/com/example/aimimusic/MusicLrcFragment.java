@@ -1,6 +1,8 @@
 package com.example.aimimusic;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,18 +117,64 @@ public class MusicLrcFragment extends Fragment{
 		String[] lrcs = lrc.split("\n");
 		for(int i=0;i<lrcs.length;i++)
 		{
-			//Log.d(TAG, "length "+lrcs[i]+" = "+lrcs[i].length());
+			Log.d(TAG, "length "+lrcs[i]+" = "+lrcs[i].length());
 			if(lrcs[i].length() > 10)
 			{
-				Lrc lineLrc = new Lrc();
-				lineLrc.time = lrcs[i].substring(1, 6);
-				lineLrc.text = lrcs[i].substring(10);
-				lineLrc.text = lineLrc.text.trim();
-				Log.d(TAG, "lineLrc="+lineLrc.text+":length="+lineLrc.text.length());
-				lineLrcs.add(lineLrc);
+				int lastTimePosition = lrcs[i].lastIndexOf("]");
+				String text = lrcs[i].substring(lastTimePosition+1);
+				for(int j=0;j<=lastTimePosition;j++)
+				{
+					if(lrcs[i].charAt(j) == '[')
+					{
+						Lrc lineLrc = new Lrc();
+						lineLrc.time = lrcs[i].substring(j+1, j+6);
+						lineLrc.text = text;
+						lineLrc.text.trim();
+						if(!TextUtils.isEmpty(lineLrc.text))
+						{
+							lineLrcs.add(lineLrc);
+							Log.d(TAG, "time:"+lineLrc.time);
+							Log.d(TAG, "text:"+lineLrc.text);
+						}
+					}
+				}
 			}
 		}
-		adapter = new MusicLrcAdapter(getActivity(), lineLrcs, -1);
+		Collections.sort(lineLrcs, new Comparator<Lrc>() {
+
+			@Override
+			public int compare(Lrc lhs, Lrc rhs) {
+				String lTime = lhs.time;
+				String rTime = rhs.time;
+				for(int i=0;i<=3;i++)
+				{
+					char l = lTime.charAt(i);
+					char r = rTime.charAt(i);
+					if(l > r)
+					{
+						return 1;
+					}
+					else if(l < r)
+					{
+						return -1;
+					}
+					else if(l == r)
+					{
+						continue;
+					}
+				}
+				return 0;
+			}
+		});
+		for(int j=0;j<lineLrcs.size();j++)
+		{
+
+			Lrc lineLrc = lineLrcs.get(j);
+			Log.d(TAG, "after time:" + lineLrc.time);
+			Log.d(TAG, "after text:" + lineLrc.text);
+
+		}
+		adapter = new MusicLrcAdapter(getActivity(), lineLrcs, 0);
 		mRecyclerView.setAdapter(adapter);
 	}
 	

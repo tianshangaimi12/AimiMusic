@@ -119,10 +119,27 @@ public class MusicPlayService extends Service{
 			}
 			else if(cmd == BroadCastUtils.CMD_PREVIOUS)
 			{
-				songIndex--;
-				if(songIndex < 0)
+				if(musicPlayType == TYPE_CIRCLE)
 				{
-					songIndex = songs.size()-1;
+					songIndex--;
+					if(songIndex < 0)
+					{
+						songIndex = songs.size()-1;
+					}
+				}
+				else if(musicPlayType == TYPE_RANDOM)
+				{
+					Random random = new Random();
+					int randomNum = random.nextInt(songs.size());
+					while(randomNum == songIndex)
+					{
+						randomNum = random.nextInt(songs.size());
+					}
+					songIndex = randomNum;
+				}
+				else if(musicPlayType == TYPE_SINGLE)
+				{
+					
 				}
 				song = songs.get(songIndex);
 				Intent preIntent = new Intent(BroadCastUtils.SERVICE_CMD);
@@ -134,10 +151,28 @@ public class MusicPlayService extends Service{
 			}
 			else if(cmd == BroadCastUtils.CMD_NEXT)
 			{
-				songIndex++;
-				if(songIndex > songs.size()-1)
+				
+				if(musicPlayType == TYPE_CIRCLE)
 				{
-					songIndex = 0;
+					songIndex++;
+					if(songIndex > songs.size()-1)
+					{
+						songIndex = 0;
+					}
+				}
+				else if(musicPlayType == TYPE_RANDOM)
+				{
+					Random random = new Random();
+					int randomNum = random.nextInt(songs.size());
+					while(randomNum == songIndex)
+					{
+						randomNum = random.nextInt(songs.size());
+					}
+					songIndex = randomNum;
+				}
+				else if(musicPlayType == TYPE_SINGLE)
+				{
+					
 				}
 				song = songs.get(songIndex);
 				Intent preIntent = new Intent(BroadCastUtils.SERVICE_CMD);
@@ -179,8 +214,10 @@ public class MusicPlayService extends Service{
 			}
 			else if(cmd == BroadCastUtils.CMD_CHANGE_PROGRESS)
 			{
+				Log.d(TAG, "before progress:"+mediaPlayer.getCurrentPosition());
 				int progress = intent.getIntExtra(BroadCastUtils.CMD_SONG_PROGRESS, 0);
-				mediaPlayer.seekTo(progress);
+				mediaPlayer.seekTo(progress*1000);
+				Log.d(TAG, "after progress:"+mediaPlayer.getCurrentPosition());
 				Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
 				aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_PROGRESS);
 				aIntent.putExtra(BroadCastUtils.CMD_SONG_PROGRESS, progress);
@@ -216,6 +253,7 @@ public class MusicPlayService extends Service{
 						JSONObject bitrate = response.optJSONObject("bitrate");
 						String file_link = bitrate.optString("file_link");
 						try {
+							mediaPlayer.reset();
 							mediaPlayer.setDataSource(file_link);
 							mediaPlayer.prepare();
 						} catch (IllegalArgumentException e) {

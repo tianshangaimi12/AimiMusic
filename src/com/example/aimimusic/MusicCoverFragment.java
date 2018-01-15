@@ -144,11 +144,24 @@ public class MusicCoverFragment extends Fragment{
 			Log.d(TAG, "length "+lrcs[i]+" = "+lrcs[i].length());
 			if(lrcs[i].length() > 10)
 			{
-				Lrc lineLrc = new Lrc();
-				lineLrc.time = lrcs[i].substring(1, 6);
-				lineLrc.text = lrcs[i].substring(10);
-				lineLrc.text.trim();
-				lineLrcs.add(lineLrc);
+				int lastTimePosition = lrcs[i].lastIndexOf("]");
+				String text = lrcs[i].substring(lastTimePosition+1);
+				for(int j=0;j<=lastTimePosition;j++)
+				{
+					if(lrcs[i].charAt(j) == '[')
+					{
+						Lrc lineLrc = new Lrc();
+						lineLrc.time = lrcs[i].substring(j+1, j+6);
+						lineLrc.text = text;
+						lineLrc.text.trim();
+						if(!TextUtils.isEmpty(lineLrc.text))
+						{
+							lineLrcs.add(lineLrc);
+							Log.d(TAG, "time:"+lineLrc.time);
+							Log.d(TAG, "text:"+lineLrc.text);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -255,6 +268,7 @@ public class MusicCoverFragment extends Fragment{
 					.resize(ImgUtils.dp2pix(getActivity(), 180), ImgUtils.dp2pix(getActivity(), 180))
 					.into(mImgCenter);
 				}
+				mTextView.setText("");
 				rotateAnimation.cancel();
 				centerAnimation.cancel();
 				if(timer != null)
