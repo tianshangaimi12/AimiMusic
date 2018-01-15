@@ -2,6 +2,7 @@ package com.example.aimimusic;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONObject;
 
@@ -20,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -30,6 +32,7 @@ public class MusicPlayService extends Service{
 	private SongList songList;
 	private List<Song> songs;
 	private int songId;
+	private int songIndex;
 	private Song song;
 	private MediaPlayer mediaPlayer;
 	
@@ -57,6 +60,43 @@ public class MusicPlayService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		songList = (SongList) intent.getSerializableExtra("songlist");
 		songs = songList.getSong_list();
+		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+			
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				if(musicPlayType == TYPE_CIRCLE)
+				{
+					songIndex++;
+					if(songIndex > songs.size()-1)
+					{
+						songIndex = 0;
+					}
+					song = songs.get(songIndex);
+				}
+				else if(musicPlayType == TYPE_RANDOM)
+				{
+					Random random = new Random();
+					int randomNum = random.nextInt(songs.size());
+					while(randomNum == songIndex)
+					{
+						randomNum = random.nextInt(songs.size());
+					}
+					songIndex = randomNum;
+					song = songs.get(songIndex);
+				}
+				else if(musicPlayType == TYPE_SINGLE)
+				{
+					
+				}
+				Intent intent = new Intent(BroadCastUtils.SERVICE_CMD);
+				intent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_SONG);
+				intent.putExtra(BroadCastUtils.CMD_SONG, song);
+				sendBroadcast(intent);
+				getMusicPlayUrl(Integer.valueOf(song.getSong_id()));
+				
+			}
+		});
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
@@ -79,17 +119,40 @@ public class MusicPlayService extends Service{
 			}
 			else if(cmd == BroadCastUtils.CMD_PREVIOUS)
 			{
+				songIndex--;
+				if(songIndex < 0)
+				{
+					songIndex = songs.size()-1;
+				}
+				song = songs.get(songIndex);
+				Intent preIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+				preIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_SONG);
+				preIntent.putExtra(BroadCastUtils.CMD_SONG, song);
+				sendBroadcast(preIntent);
+				getMusicPlayUrl(Integer.valueOf(song.getSong_id()));
 				
 			}
 			else if(cmd == BroadCastUtils.CMD_NEXT)
 			{
-				
+				songIndex++;
+				if(songIndex > songs.size()-1)
+				{
+					songIndex = 0;
+				}
+				song = songs.get(songIndex);
+				Intent preIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+				preIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_SONG);
+				preIntent.putExtra(BroadCastUtils.CMD_SONG, song);
+				sendBroadcast(preIntent);
+				getMusicPlayUrl(Integer.valueOf(song.getSong_id()));
 			}
 			else if(cmd == BroadCastUtils.CMD_PLAY)
 			{
 				if(songId != intent.getIntExtra(BroadCastUtils.CMD_SONGID, 0))
 				{
 					songId = intent.getIntExtra(BroadCastUtils.CMD_SONGID, 0);
+					songIndex = getSongIndex(songId);
+					song = songs.get(songIndex);
 					getMusicPlayUrl(songId);
 				}
 				else 
@@ -112,6 +175,15 @@ public class MusicPlayService extends Service{
 				}
 				Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
 				aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PAUSE);
+				sendBroadcast(aIntent);
+			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_PROGRESS)
+			{
+				int progress = intent.getIntExtra(BroadCastUtils.CMD_SONG_PROGRESS, 0);
+				mediaPlayer.seekTo(progress);
+				Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+				aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_PROGRESS);
+				aIntent.putExtra(BroadCastUtils.CMD_SONG_PROGRESS, progress);
 				sendBroadcast(aIntent);
 			}
 		}
@@ -143,7 +215,6 @@ public class MusicPlayService extends Service{
 						Log.d(TAG, "response="+response.toString());
 						JSONObject bitrate = response.optJSONObject("bitrate");
 						String file_link = bitrate.optString("file_link");
-						mediaPlayer = new MediaPlayer();
 						try {
 							mediaPlayer.setDataSource(file_link);
 							mediaPlayer.prepare();

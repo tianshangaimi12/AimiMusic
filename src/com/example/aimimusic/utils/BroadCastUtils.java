@@ -14,10 +14,17 @@ public class BroadCastUtils {
 	
 	public final static int CMD_RESUME = 6;
 	
+	public final static int CMD_CHANGE_SONG = 7;
+	
+	public final static int CMD_CHANGE_PROGRESS = 8;
 	
 	public final static String CMD = "cmd";
 	
 	public final static String CMD_SONGID = "cmd_songid";
+	
+	public final static String CMD_SONG = "cmd_song";
+	
+	public final static String CMD_SONG_PROGRESS = "cmd_song_progress";
 	
 	public final static String MUSIC_SERVICE = "aimi.music.service";
 	

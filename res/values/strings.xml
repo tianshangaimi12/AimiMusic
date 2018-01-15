@@ -9,4 +9,7 @@
 	<string name="main_music_list">主打榜单</string>
 	<string name="kind_music_list">分类榜单</string>
 	<string name="music_loading">音乐马上来</string>
+	<string name="cicle_mode">列表循环</string>
+	<string name="single_mode">单曲循环</string>
+	<string name="random_mode">随机播放</string>
 </resources>

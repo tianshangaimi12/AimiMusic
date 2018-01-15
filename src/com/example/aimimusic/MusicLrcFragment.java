@@ -2,6 +2,8 @@ package com.example.aimimusic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -14,6 +16,7 @@ import com.example.aimimusic.element.Lrc;
 import com.example.aimimusic.element.Song;
 import com.example.aimimusic.utils.BroadCastUtils;
 import com.example.aimimusic.utils.HttpUtils;
+import com.example.aimimusic.utils.ImgUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +38,8 @@ public class MusicLrcFragment extends Fragment{
 	private List<Lrc> lineLrcs;
 	private MusicLrcAdapter adapter;
 	private Receiver receiver;
+	private Timer timer;
+	private int time;
 	
 	private RecyclerView mRecyclerView;
 	
@@ -104,6 +109,7 @@ public class MusicLrcFragment extends Fragment{
 	
 	public void getLrc(String lrc)
 	{
+		lineLrcs.clear();
 		lrc = lrc.replace("\r", "");
 		String[] lrcs = lrc.split("\n");
 		for(int i=0;i<lrcs.length;i++)
@@ -119,7 +125,7 @@ public class MusicLrcFragment extends Fragment{
 				lineLrcs.add(lineLrc);
 			}
 		}
-		adapter = new MusicLrcAdapter(getActivity(), lineLrcs);
+		adapter = new MusicLrcAdapter(getActivity(), lineLrcs, -1);
 		mRecyclerView.setAdapter(adapter);
 	}
 	
@@ -131,13 +137,65 @@ public class MusicLrcFragment extends Fragment{
 			int cmd = intent.getIntExtra(BroadCastUtils.CMD, 0);
 			if(cmd == BroadCastUtils.CMD_PLAY)
 			{
-				
+				time = 0;
+				startTimer();
 			}
 			else if(cmd == BroadCastUtils.CMD_RESUME)
 			{
-				
+				startTimer();
+			}
+			else if(cmd == BroadCastUtils.CMD_PAUSE)
+			{
+				timer.cancel();
+			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_SONG)
+			{
+				Song receiveSong = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
+				if(receiveSong != song)
+				{
+					getMusicLrc(Integer.valueOf(receiveSong.getSong_id()));
+				}
+				if(timer != null)
+				{
+					timer.cancel();
+				}
+			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_PROGRESS)
+			{
+				int progress = intent.getIntExtra(BroadCastUtils.CMD_SONG_PROGRESS, 0);
+				time = progress;
 			}
 		}
 		
+	}
+	
+	public void startTimer()
+	{
+		timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				time++;
+				for(int i=0;i< lineLrcs.size();i++)
+				{
+					final int location = i;
+					Lrc lrc = lineLrcs.get(i);
+					String lrcTime = lrc.time;
+					if(ImgUtils.getMusicTime(time).equals(lrcTime))
+					{
+						mRecyclerView.postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								adapter = new MusicLrcAdapter(getActivity(), lineLrcs, location);
+								mRecyclerView.setAdapter(adapter);
+								mRecyclerView.scrollToPosition(location);
+							}
+						}, 300);
+					}
+				}
+			}
+		}, 0, 1000);
 	}
 }

@@ -131,8 +131,12 @@ public class MusicCoverFragment extends Fragment{
 		MusicApplication.getRequestQueue(getActivity()).add(request);
 	}
 	
+	/**
+	 * @param lrc
+	 */
 	public void getLrc(String lrc)
 	{
+		lineLrcs.clear();
 		lrc = lrc.replace("\r", "");
 		String[] lrcs = lrc.split("\n");
 		for(int i=0;i<lrcs.length;i++)
@@ -237,6 +241,35 @@ public class MusicCoverFragment extends Fragment{
 			else if(cmd == BroadCastUtils.CMD_PAUSE)
 			{
 				pausePlayMusic();
+			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_SONG)
+			{
+				Song receiveSong = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
+				if(receiveSong != song)
+				{
+					getMusicLrc(Integer.valueOf(receiveSong.getSong_id()));
+					Picasso.with(getActivity())
+					.load(receiveSong.getPic_radio())
+					.placeholder(R.drawable.play_page_default_cover)
+					.centerCrop()
+					.resize(ImgUtils.dp2pix(getActivity(), 180), ImgUtils.dp2pix(getActivity(), 180))
+					.into(mImgCenter);
+				}
+				rotateAnimation.cancel();
+				centerAnimation.cancel();
+				if(timer != null)
+				{
+					timer.cancel();
+				}
+				if(barAnimation)
+				{
+					startBarAnimation();
+				}
+			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_PROGRESS)
+			{
+				int progress = intent.getIntExtra(BroadCastUtils.CMD_SONG_PROGRESS, 0);
+				time = progress;
 			}
 		}
 		

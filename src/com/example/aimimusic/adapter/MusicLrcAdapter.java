@@ -5,7 +5,9 @@ import java.util.List;
 import com.example.aimimusic.R;
 import com.example.aimimusic.element.Lrc;
 
+import android.R.color;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -17,11 +19,13 @@ public class MusicLrcAdapter extends RecyclerView.Adapter{
 	
 	private Context context;
 	private List<Lrc> lineLrcs;
+	private int location;
 	
-	public MusicLrcAdapter(Context context, List<Lrc> lineLrcs)
+	public MusicLrcAdapter(Context context, List<Lrc> lineLrcs, int location)
 	{
 		this.context = context;
 		this.lineLrcs = lineLrcs;
+		this.location = location;
 	}
 
 	@Override
@@ -33,6 +37,13 @@ public class MusicLrcAdapter extends RecyclerView.Adapter{
 	public void onBindViewHolder(ViewHolder arg0, int arg1) {
 		LrcViewHolder viewHolder = (LrcViewHolder)arg0;
 		viewHolder.txtLrc.setText(lineLrcs.get(arg1).text);
+		if(arg1 == location)
+		{
+			viewHolder.txtLrc.setTextColor(Color.WHITE);
+		}
+		else {
+			viewHolder.txtLrc.setTextColor(Color.parseColor("#666666"));
+		}
 	}
 
 	@Override

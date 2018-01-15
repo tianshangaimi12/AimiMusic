@@ -6,7 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.example.aimimusic.adapter.FragmentAdapter;
-import com.example.aimimusic.element.Lrc;
 import com.example.aimimusic.element.Song;
 import com.example.aimimusic.utils.BroadCastUtils;
 import com.example.aimimusic.utils.ImgUtils;
@@ -25,7 +24,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PlayMusicActivity extends FragmentActivity implements OnClickListener{
 	private Song song;
@@ -37,12 +38,17 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	private Receiver receiver;
 	private Timer timer;
 	private int time;
+	private int playMode;
+	private Toast toast;
 	
 	private ViewPager mPager;
 	private ImageButton mImgClose;
 	private ImageView mImgFirst;
 	private ImageView mImgSecond;
 	private ImageView mImgSwitch;
+	private ImageView mImgMode;
+	private ImageView mImgPre;
+	private ImageView mImgNext;
 	private TextView mTxtTitle;
 	private TextView mTxtArtist;
 	private TextView mTxtStart;
@@ -86,6 +92,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		fragments.add(musicLrcFragment);
 		adapter = new FragmentAdapter(getSupportFragmentManager(), fragments);
 		switchType = SWITCH_PAUSE;
+		playMode = TYPE_CIRCLE;
 	}
 	
 	public void initView()
@@ -94,6 +101,12 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		mPager.setAdapter(adapter);
 		mImgClose = (ImageButton)findViewById(R.id.ibtn_close_play);
 		mImgClose.setOnClickListener(this);
+		mImgMode = (ImageView)findViewById(R.id.img_play_music_mode);
+		mImgMode.setOnClickListener(this);
+		mImgPre = (ImageView)findViewById(R.id.img_play_music_previous);
+		mImgPre.setOnClickListener(this);
+		mImgNext = (ImageView)findViewById(R.id.img_play_music_next);
+		mImgNext.setOnClickListener(this);
 		mImgFirst = (ImageView)findViewById(R.id.img_first_index);
 		mImgSecond = (ImageView)findViewById(R.id.img_second_index);
 		mTxtTitle = (TextView)findViewById(R.id.txt_play_music_title);
@@ -108,6 +121,25 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		mImgSwitch.setOnClickListener(this);
 		mSeekBarProgress = (SeekBar)findViewById(R.id.sb_paly_music_progress);
 		mSeekBarProgress.setMax(song.getFile_duration());
+		mSeekBarProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				Intent intent = new Intent(BroadCastUtils.MUSIC_SERVICE);
+				intent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_PROGRESS);
+				intent.putExtra(BroadCastUtils.CMD_SONG_PROGRESS, progress);
+//				sendBroadcast(intent);
+			}
+		});
 		mPager.addOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -154,6 +186,34 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 				mImgSwitch.setImageResource(R.drawable.ic_play_btn_play);
 				sendControll(BroadCastUtils.CMD_PAUSE, 0);
 			}
+			break;
+		case R.id.img_play_music_mode:
+			sendControll(BroadCastUtils.CMD_CHANGE_TYPE, 0);
+			if(playMode == TYPE_CIRCLE)
+			{
+				playMode = TYPE_RANDOM;
+				mImgMode.setImageResource(R.drawable.ic_play_btn_shuffle);
+				sendToast(getResources().getString(R.string.random_mode));
+			}
+			else if(playMode == TYPE_RANDOM)
+			{
+				playMode = TYPE_SINGLE;
+				mImgMode.setImageResource(R.drawable.ic_play_btn_one);
+				sendToast(getResources().getString(R.string.single_mode));
+			}
+			else if(playMode == TYPE_SINGLE)
+			{
+				playMode = TYPE_CIRCLE;
+				mImgMode.setImageResource(R.drawable.ic_play_btn_loop);
+				sendToast(getResources().getString(R.string.cicle_mode));
+			}
+			break;
+		case R.id.img_play_music_previous:
+			sendControll(BroadCastUtils.CMD_PREVIOUS, 0);
+			break;
+		case R.id.img_play_music_next:
+			sendControll(BroadCastUtils.CMD_NEXT, 0);
+			break;
 		default:
 			break;
 		}
@@ -190,6 +250,25 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 			{
 				timer.cancel();
 			}
+			else if(cmd == BroadCastUtils.CMD_CHANGE_SONG)
+			{
+				Song receiveSong = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
+				if(receiveSong != null)
+				{
+					song = receiveSong;
+					mTxtTitle.setText(receiveSong.getTitle());
+					mTxtArtist.setText(receiveSong.getArtist_name());
+					mTxtEnd.setText(ImgUtils.getMusicTime(receiveSong.getFile_duration()));
+					mSeekBarProgress.setMax(receiveSong.getFile_duration());
+					mSeekBarProgress.setProgress(0);
+					switchType = SWITCH_PLAY;
+					mImgSwitch.setImageResource(R.drawable.ic_play_btn_pause);
+				}
+				if(timer != null)
+				{
+					timer.cancel();
+				}
+			}
 				
 		}
 		
@@ -203,6 +282,10 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 			@Override
 			public void run() {
 				time++;
+				if(time > song.getFile_duration())
+				{
+					time = song.getFile_duration();
+				}
 				PlayMusicActivity.this.runOnUiThread(new Runnable() {
 					
 					@Override
@@ -214,6 +297,19 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 				
 			}
 		}, 0, 1000);
+	}
+	
+	public void sendToast(String text)
+	{
+		if(toast == null)
+		{
+			toast = toast.makeText(this, text, Toast.LENGTH_LONG);
+		}
+		else {
+			toast.setText(text);
+			toast.setDuration(Toast.LENGTH_LONG);
+		}
+		toast.show();
 	}
 	
 }
