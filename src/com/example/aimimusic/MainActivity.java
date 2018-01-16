@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.aimimusic.adapter.FragmentAdapter;
 import com.example.aimimusic.existmusic.ExsitMusicFragment;
 import com.example.aimimusic.internetmusic.InternetMusicFragment;
+import com.example.aimimusic.utils.ImgUtils;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
@@ -52,12 +54,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     
     public void initView()
     {
-    	 mToolbar = (Toolbar)findViewById(R.id.toolbar_main);
-         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout_main);
-         mToolbar.setTitle("");
-         setSupportActionBar(mToolbar);
-         mToolbar.setNavigationIcon(R.drawable.ic_menu);
-         mToolbar.setNavigationOnClickListener(new OnClickListener() {
+    	View status = findViewById(R.id.main_statusBarView);
+    	ViewGroup.LayoutParams layoutParams = status.getLayoutParams();
+    	layoutParams.height = ImgUtils.getStatusBarHeight(this);
+    	mToolbar = (Toolbar)findViewById(R.id.toolbar_main);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerlayout_main);
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_menu);
+        mToolbar.setNavigationOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

@@ -4,13 +4,19 @@
     android:layout_height="match_parent" 
     android:background="@drawable/play_page_default_bg"
     android:padding="10dp">
+    <View
+        android:id="@+id/play_statusBarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+    </View>
     <ImageButton 
         android:id="@+id/ibtn_close_play"
         android:src="@drawable/ic_arrow_down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/play_statusBarView"
         android:background="#00ffffff"/>
     <TextView 
         android:id="@+id/txt_play_music_title"
@@ -19,7 +25,8 @@
         android:layout_toRightOf="@id/ibtn_close_play"
         android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ibtn_close_play"/>
     <TextView 
         android:id="@+id/txt_play_music_artist"
         android:textColor="#dddddd"

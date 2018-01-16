@@ -11,6 +11,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        <View
+            android:id="@+id/main_statusBarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FF4500" >
+        </View>
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"

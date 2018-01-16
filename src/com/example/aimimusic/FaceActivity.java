@@ -1,7 +1,5 @@
 package com.example.aimimusic;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -15,17 +13,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class FaceActivity extends Activity{
 	private ImageView mImageView;
-
+	private int width;
+	private int height;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_face);
 		mImageView = (ImageView)findViewById(R.id.img_bing_pic);
+		width = getResources().getDisplayMetrics().widthPixels;
+		height = getResources().getDisplayMetrics().heightPixels*4/5;
 		getBingPic();
 	}
 	
@@ -38,6 +39,7 @@ public class FaceActivity extends Activity{
 					public void onResponse(String response) {
 						Picasso.with(FaceActivity.this)
 						.load(response)
+						.resize(width, height)
 						.into(mImageView,new Callback() {
 							
 							@Override

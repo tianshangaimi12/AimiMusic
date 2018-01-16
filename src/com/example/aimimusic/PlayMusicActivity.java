@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -101,6 +103,9 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	
 	public void initView()
 	{
+		View status = findViewById(R.id.play_statusBarView);
+    	ViewGroup.LayoutParams layoutParams = status.getLayoutParams();
+    	layoutParams.height = ImgUtils.getStatusBarHeight(this);
 		mPager = (ViewPager)findViewById(R.id.vp_play_music);
 		mPager.setAdapter(adapter);
 		mImgClose = (ImageButton)findViewById(R.id.ibtn_close_play);

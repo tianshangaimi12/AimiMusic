@@ -2,14 +2,17 @@ package com.example.aimimusic;
 
 import com.example.aimimusic.adapter.MusicInfoAdapter;
 import com.example.aimimusic.element.SongList;
+import com.example.aimimusic.utils.ImgUtils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
@@ -32,6 +35,9 @@ public class MusicListActivity extends Activity{
 	
 	public void init()
 	{
+		View status = findViewById(R.id.music_statusBarView);
+    	ViewGroup.LayoutParams layoutParams = status.getLayoutParams();
+    	layoutParams.height = ImgUtils.getStatusBarHeight(this);
 		Intent intent = getIntent();
 		final SongList songList = (SongList) intent.getSerializableExtra("songlist");
 		mToolbar = (Toolbar)findViewById(R.id.toolbar_music_list);

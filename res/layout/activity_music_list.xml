@@ -4,7 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-   <android.support.v7.widget.Toolbar
+    <View
+        android:id="@+id/music_statusBarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF4500" >
+    </View>
+
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_music_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,9 +25,10 @@
             android:textColor="#fff"
             android:textSize="18sp" />
     </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_music_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
