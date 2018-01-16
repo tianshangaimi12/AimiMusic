@@ -3,6 +3,7 @@ package com.example.aimimusic.utils;
 public class HttpUtils {
 	
 	public static final String BING_PIC_URL = "http://guolin.tech/api/bing_pic";
+	public static final String WEATHER_URL = "http://jisutqybmf.market.alicloudapi.com/weather/query";
 	public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=";
 	
 	/**

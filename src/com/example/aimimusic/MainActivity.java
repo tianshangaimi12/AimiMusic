@@ -31,9 +31,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 	private TextView mTextViewExist;
 	private TextView mTextViewInternet;
 	private ViewPager mViewPager;
+	
 	private List<Fragment> fragments;
 	private ExsitMusicFragment exsitMusicFragment;
 	private InternetMusicFragment internetMusicFragment;
+	private SettingFragment settingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     	fragments = new ArrayList<Fragment>();
     	exsitMusicFragment = new ExsitMusicFragment();
     	internetMusicFragment = new InternetMusicFragment();
+    	settingFragment = new SettingFragment();
     	fragments.add(internetMusicFragment);
     	fragments.add(exsitMusicFragment);
+    	getSupportFragmentManager().beginTransaction().add(R.id.framlayout_setting, settingFragment).commit();
     }
     
     public void initView()

@@ -60,8 +60,7 @@
         android:id="@+id/framlayout_setting"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:background="#d32" >
+        android:layout_gravity="left">
     </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>
