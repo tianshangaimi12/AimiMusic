@@ -13,4 +13,8 @@
 	<string name="single_mode">单曲循环</string>
 	<string name="random_mode">随机播放</string>
 	<string name="copyright">Copyright @1992-2018</string>
+	<string name="about_menu">关于艾米音乐</string>
+	<string name="exit_menu">退出应用</string>
+	<string name="love_menu">我的收藏</string>
+	<string name="search_hint">歌手名、歌曲名</string>
 </resources>

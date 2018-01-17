@@ -11,8 +11,11 @@ import com.android.volley.VolleyError;
 import com.example.aimimusic.element.WeatherInfo;
 import com.example.aimimusic.utils.HttpUtils;
 import com.example.aimimusic.utils.MyRequest;
+import com.example.aimimusic.view.SettingMenu;
 import com.google.gson.Gson;
 
+import android.R.integer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,11 +23,13 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class SettingFragment extends Fragment{
+public class SettingFragment extends Fragment implements OnClickListener{
 	
 	private ImageView mImageView;
 	private TextView mTxtClimate;
@@ -34,6 +39,9 @@ public class SettingFragment extends Fragment{
 	
 	private final String TAG = "SettingFragment";
 	private final int UPDATE_WEATHER = 1;
+	
+	private final int[] imgIds = {R.drawable.ic_menu_love, R.drawable.ic_menu_about, R.drawable.ic_menu_exit};
+	private final int[] txtIds = {R.string.love_menu, R.string.about_menu, R.string.exit_menu};
 	
 	private Handler handler = new Handler()
 	{
@@ -53,18 +61,26 @@ public class SettingFragment extends Fragment{
 	@Nullable
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_setting, container, false);
+		LinearLayout view = (LinearLayout) inflater.inflate(R.layout.fragment_setting, container, false);
 		initView(view);
 		getWeatherInfo();
 		return view;
 	}
 	
-	public void initView(View view)
+	public void initView(LinearLayout view)
 	{
 		mImageView = (ImageView)view.findViewById(R.id.img_weather_ico);
 		mTxtClimate = (TextView)view.findViewById(R.id.txt_weather_climate);
 		mTxtCity = (TextView)view.findViewById(R.id.txt_weather_city);
 		mTxtWind = (TextView)view.findViewById(R.id.txt_weather_info);
+		for(int i=0;i<imgIds.length;i++)
+		{
+			SettingMenu settingMenu = new SettingMenu(getActivity());
+			settingMenu.setResource(imgIds[i], txtIds[i]);
+			settingMenu.setTag(i);
+			settingMenu.setOnClickListener(this);
+			view.addView(settingMenu);
+		}
 	}
 	
 	public void getWeatherInfo()
@@ -122,6 +138,24 @@ public class SettingFragment extends Fragment{
 		else if(weather.contains("雾"))
 		{
 			mImageView.setImageResource(R.drawable.ic_weather_foggy);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch ((Integer)v.getTag()) {
+		case 0:
+			
+			break;
+		case 1:
+			break;
+		case 2:
+			Intent intent = new Intent(getActivity(), MusicPlayService.class);
+			getActivity().stopService(intent);
+			getActivity().finish();
+			break;
+		default:
+			break;
 		}
 	}
 

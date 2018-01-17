@@ -8,6 +8,7 @@ import com.example.aimimusic.existmusic.ExsitMusicFragment;
 import com.example.aimimusic.internetmusic.InternetMusicFragment;
 import com.example.aimimusic.utils.ImgUtils;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -79,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 			public boolean onMenuItemClick(MenuItem arg0) {
 				switch (arg0.getItemId()) {
 				case R.id.btn_search:
-					MainActivity.this.finish();
+					Intent intent = new Intent(MainActivity.this, SearchMusicActivity.class);
+					startActivity(intent);
 					break;
 
 				default:
