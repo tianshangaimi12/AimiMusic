@@ -19,7 +19,7 @@ public class HttpUtils {
 	
 	public static String getSearchUrl(String query)
 	{
-		return BASE_URL+"baidu.ting.search.catalogSug"+"?query="+query;
+		return BASE_URL+"baidu.ting.search.catalogSug"+"&query="+query;
 	}
 	
 	public static String getPlayMusicUrl(int songid)

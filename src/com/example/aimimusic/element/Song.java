@@ -18,6 +18,22 @@ public class Song implements Serializable{
 	private String publishtime;
 	private String playUrl;
 	private int file_duration;
+	private String lrclink;
+	private String album_title;
+	
+	
+	public Song()
+	{
+		
+	}
+	
+	public Song(String song_id, String title, String artist_name)
+	{
+		this.song_id = song_id;
+		this.title = title;
+		this.artist_name = artist_name;
+	}
+	
 	public int getFile_duration() {
 		return file_duration;
 	}
@@ -42,8 +58,6 @@ public class Song implements Serializable{
 	public void setPublishtime(String publishtime) {
 		this.publishtime = publishtime;
 	}
-	private String lrclink;
-	private String album_title;
 	public String getAlbum_title() {
 		return album_title;
 	}

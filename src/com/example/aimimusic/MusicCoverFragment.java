@@ -258,7 +258,7 @@ public class MusicCoverFragment extends Fragment{
 			else if(cmd == BroadCastUtils.CMD_CHANGE_SONG)
 			{
 				Song receiveSong = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
-				if(receiveSong != song)
+				if(receiveSong != song && (!TextUtils.isEmpty(receiveSong.getPic_radio())))
 				{
 					getMusicLrc(Integer.valueOf(receiveSong.getSong_id()));
 					Picasso.with(getActivity())
@@ -267,6 +267,10 @@ public class MusicCoverFragment extends Fragment{
 					.centerCrop()
 					.resize(ImgUtils.dp2pix(getActivity(), 180), ImgUtils.dp2pix(getActivity(), 180))
 					.into(mImgCenter);
+				}
+				else if(receiveSong != song)
+				{
+					mImgCenter.setImageResource(R.drawable.play_page_default_cover);
 				}
 				mTextView.setText("");
 				rotateAnimation.cancel();
@@ -284,6 +288,19 @@ public class MusicCoverFragment extends Fragment{
 			{
 				int progress = intent.getIntExtra(BroadCastUtils.CMD_SONG_PROGRESS, 0);
 				time = progress;
+			}
+			else if(cmd == BroadCastUtils.CMD_UPDATE)
+			{
+				song = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
+				if(!TextUtils.isEmpty(song.getPic_radio()))
+				{
+					Picasso.with(getActivity())
+					.load(song.getPic_radio())
+					.placeholder(R.drawable.play_page_default_cover)
+					.centerCrop()
+					.resize(ImgUtils.dp2pix(getActivity(), 180), ImgUtils.dp2pix(getActivity(), 180))
+					.into(mImgCenter);
+				}
 			}
 		}
 		

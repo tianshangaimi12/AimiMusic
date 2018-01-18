@@ -139,6 +139,10 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		{
 			mImageView.setImageResource(R.drawable.ic_weather_foggy);
 		}
+		else if(weather.contains("阴"))
+		{
+			mImageView.setImageResource(R.drawable.ic_weather_overcast);
+		}
 	}
 
 	@Override

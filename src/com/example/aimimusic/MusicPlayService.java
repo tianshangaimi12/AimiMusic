@@ -252,6 +252,15 @@ public class MusicPlayService extends Service{
 						Log.d(TAG, "response="+response.toString());
 						JSONObject bitrate = response.optJSONObject("bitrate");
 						String file_link = bitrate.optString("file_link");
+						int file_duration = bitrate.optInt("file_duration");
+						JSONObject songinfo = response.optJSONObject("songinfo");
+						String pic_radio = songinfo.optString("pic_radio");
+						song.setFile_duration(file_duration);
+						song.setPic_radio(pic_radio);
+						Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+						aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_UPDATE);
+						aIntent.putExtra(BroadCastUtils.CMD_SONG, song);
+						sendBroadcast(aIntent);
 						try {
 							mediaPlayer.reset();
 							mediaPlayer.setDataSource(file_link);

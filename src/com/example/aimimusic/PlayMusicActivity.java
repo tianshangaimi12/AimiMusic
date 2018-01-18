@@ -291,6 +291,15 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 				mSeekBarProgress.setProgress(time);
 				Log.d(TAG, "change progress:"+progress);
 			}
+			else if(cmd == BroadCastUtils.CMD_UPDATE)
+			{
+				song = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
+				mTxtEnd.setText(ImgUtils.getMusicTime(song.getFile_duration()));
+				if(timer != null)
+				{
+					timer.cancel();
+				}
+			}
 				
 		}
 		

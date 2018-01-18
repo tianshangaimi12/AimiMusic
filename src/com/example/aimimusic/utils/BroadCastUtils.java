@@ -18,6 +18,8 @@ public class BroadCastUtils {
 	
 	public final static int CMD_CHANGE_PROGRESS = 8;
 	
+	public final static int CMD_UPDATE = 9;
+	
 	public final static String CMD = "cmd";
 	
 	public final static String CMD_SONGID = "cmd_songid";
