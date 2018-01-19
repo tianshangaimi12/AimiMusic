@@ -164,6 +164,10 @@ public class MusicCoverFragment extends Fragment{
 				}
 			}
 		}
+		if(lineLrcs.size() == 0)
+		{
+			mTextView.setText(getResources().getString(R.string.null_lrc));
+		}
 	}
 	
 	public void startPlayMusic()

@@ -18,4 +18,5 @@
 	<string name="love_menu">我的收藏</string>
 	<string name="search_hint">歌手名、歌曲名</string>
 	<string name="search_null_toast">查询结果为空</string>
+	<string name="null_lrc">暂无歌词</string>
 </resources>

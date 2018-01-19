@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class MusicLrcFragment extends Fragment{
 	
@@ -45,6 +46,7 @@ public class MusicLrcFragment extends Fragment{
 	private int time;
 	
 	private RecyclerView mRecyclerView;
+	private TextView mTextView;
 	
 	private final String TAG = "MusicLrcFragment";
 	
@@ -82,6 +84,7 @@ public class MusicLrcFragment extends Fragment{
 
 	public void init(View view)
 	{
+		mTextView = (TextView)view.findViewById(R.id.txt_null_lrc);
 		mRecyclerView = (RecyclerView)view.findViewById(R.id.list_play_music_lrc);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		lineLrcs = new ArrayList<Lrc>();
@@ -139,6 +142,13 @@ public class MusicLrcFragment extends Fragment{
 					}
 				}
 			}
+		}
+		if(lineLrcs.size() == 0)
+		{
+			mTextView.setVisibility(View.VISIBLE);
+		}
+		else {
+			mTextView.setVisibility(View.INVISIBLE);
 		}
 		Collections.sort(lineLrcs, new Comparator<Lrc>() {
 
@@ -199,6 +209,7 @@ public class MusicLrcFragment extends Fragment{
 			}
 			else if(cmd == BroadCastUtils.CMD_CHANGE_SONG)
 			{
+				mTextView.setVisibility(View.INVISIBLE);
 				Song receiveSong = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
 				if(receiveSong != song)
 				{

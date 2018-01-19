@@ -2,28 +2,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    <ImageView 
+
+    <ImageView
         android:id="@+id/img_play_music_volum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_volume"
+        android:src="@drawable/ic_volume" />
+
+    <SeekBar
+        android:id="@+id/sb_play_music_volum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@id/img_play_music_volum"
+        android:thumb="@drawable/ic_seek_bar_volume_btn" />
+
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-	<SeekBar 
-	    android:id="@+id/sb_play_music_volum"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:thumb="@drawable/ic_seek_bar_volume_btn"
-	    android:layout_toRightOf="@id/img_play_music_volum"
-	    android:layout_alignParentTop="true"
-	    android:layout_marginRight="20dp"
-	    android:layout_marginLeft="10dp"/>
-	<android.support.v7.widget.RecyclerView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:id="@+id/list_play_music_lrc"
-	    android:layout_centerHorizontal="true"
-	    android:layout_alignParentBottom="true"
-	    android:layout_marginBottom="20dp"
-	    android:layout_marginTop="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp" >
+
+        <TextView
+            android:id="@+id/txt_null_lrc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/null_lrc"
+            android:textColor="#666666"
+            android:textSize="16sp" 
+            android:visibility="invisible"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_play_music_lrc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 </RelativeLayout>

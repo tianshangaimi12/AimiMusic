@@ -153,6 +153,7 @@ public class SearchMusicActivity extends AppCompatActivity implements ItemClickL
 	
 	public void generateSongs(List<SearchSong> searchSongs)
 	{
+		songs.clear();
 		for(int i=0;i<searchSongs.size();i++)
 		{
 			SearchSong searchSong = searchSongs.get(i);
