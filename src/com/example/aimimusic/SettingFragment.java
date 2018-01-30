@@ -8,7 +8,9 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.example.aimimusic.element.WeatherInfo;
+import com.example.aimimusic.utils.CircleCrop;
 import com.example.aimimusic.utils.HttpUtils;
 import com.example.aimimusic.utils.MyRequest;
 import com.example.aimimusic.view.SettingMenu;
@@ -21,12 +23,14 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 public class SettingFragment extends Fragment implements OnClickListener{
@@ -36,12 +40,14 @@ public class SettingFragment extends Fragment implements OnClickListener{
 	private TextView mTxtCity;
 	private TextView mTxtWind;
 	private WeatherInfo weatherInfo;
+	private LinearLayout view;
 	
 	private final String TAG = "SettingFragment";
 	private final int UPDATE_WEATHER = 1;
 	
 	private final int[] imgIds = {R.drawable.ic_menu_love, R.drawable.ic_menu_about, R.drawable.ic_menu_exit};
 	private final int[] txtIds = {R.string.love_menu, R.string.about_menu, R.string.exit_menu};
+	private final String ABOUT_IMG_URL = "http://www.enterdesk.com/uploadfile/2014/0227/20140227113508372.jpg";
 	
 	private Handler handler = new Handler()
 	{
@@ -61,7 +67,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 	@Nullable
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		LinearLayout view = (LinearLayout) inflater.inflate(R.layout.fragment_setting, container, false);
+		view = (LinearLayout) inflater.inflate(R.layout.fragment_setting, container, false);
 		initView(view);
 		getWeatherInfo();
 		return view;
@@ -152,6 +158,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 			
 			break;
 		case 1:
+			showAboutWindow();
 			break;
 		case 2:
 			Intent intent = new Intent(getActivity(), MusicPlayService.class);
@@ -161,6 +168,26 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		default:
 			break;
 		}
+	}
+	
+	public void showAboutWindow()
+	{
+		PopupWindow popupWindow = new PopupWindow(getActivity());
+		popupWindow.setWidth(900);
+		popupWindow.setHeight(500);
+		View contentView = LayoutInflater.from(getActivity()).inflate(R.layout.pop_setting_item_about, null);
+		ImageView img = (ImageView)contentView.findViewById(R.id.img_pop_setting_about);
+		Glide.with(getActivity())
+		.load(ABOUT_IMG_URL)
+		.transform(new CircleCrop(getActivity()))
+		.placeholder(R.drawable.ic_launcher)
+		.into(img);
+		TextView txt = (TextView)contentView.findViewById(R.id.txt_pop_setting_about);
+		txt.setText("CREATED"+"\n"+"BY"+"\n"+"Z&C");
+		popupWindow.setContentView(contentView);
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.setBackgroundDrawable(null);
+		popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 	}
 
 }
