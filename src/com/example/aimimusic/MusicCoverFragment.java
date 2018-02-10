@@ -46,6 +46,7 @@ public class MusicCoverFragment extends Fragment{
 	private int time;
 	private Timer timer;
 	private boolean barAnimation;
+	private int playMusicType;
 	
 	private TextView mTextView;
 	private ImageView mImgCenter;
@@ -54,9 +55,10 @@ public class MusicCoverFragment extends Fragment{
 	
 	private final String TAG = "MusicCoverFragment";
 	
-	public MusicCoverFragment(Song song)
+	public MusicCoverFragment(Song song, int playMusicType)
 	{
 		this.song = song;
+		this.playMusicType = playMusicType;
 	}
 	
 	@Override
@@ -84,7 +86,13 @@ public class MusicCoverFragment extends Fragment{
 		View view = inflater.inflate(R.layout.fragment_music_play_cover, container, false);
 		init(view);
 		startBarAnimation();
-		getMusicLrc(Integer.valueOf(song.getSong_id()));
+		if(!TextUtils.isEmpty(song.getSong_id()) && playMusicType == BroadCastUtils.TYPE_ONLINE)
+		{
+			getMusicLrc(Integer.valueOf(song.getSong_id()));
+		}
+		else {
+			mTextView.setText(getResources().getString(R.string.null_lrc));
+		}
 		return view;
 	}
 	
@@ -276,7 +284,13 @@ public class MusicCoverFragment extends Fragment{
 				{
 					mImgCenter.setImageResource(R.drawable.play_page_default_cover);
 				}
-				mTextView.setText("");
+				if(playMusicType == BroadCastUtils.TYPE_ONLINE)
+				{
+					mTextView.setText("");
+				}
+				else {
+					mTextView.setText(getResources().getString(R.string.null_lrc));
+				}
 				rotateAnimation.cancel();
 				centerAnimation.cancel();
 				if(timer != null)

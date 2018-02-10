@@ -44,15 +44,17 @@ public class MusicLrcFragment extends Fragment{
 	private Receiver receiver;
 	private Timer timer;
 	private int time;
+	private int playMusicType;
 	
 	private RecyclerView mRecyclerView;
 	private TextView mTextView;
 	
 	private final String TAG = "MusicLrcFragment";
 	
-	public MusicLrcFragment(Song song)
+	public MusicLrcFragment(Song song, int playMusicType)
 	{
 		this.song = song;
+		this.playMusicType = playMusicType;
 	}
 	
 	@Override
@@ -78,7 +80,14 @@ public class MusicLrcFragment extends Fragment{
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_music_play_lrc, container, false);
 		init(view);
-		getMusicLrc(Integer.valueOf(song.getSong_id()));
+		if(!TextUtils.isEmpty(song.getSong_id()) && playMusicType == BroadCastUtils.TYPE_ONLINE)
+		{
+			getMusicLrc(Integer.valueOf(song.getSong_id()));
+		}
+		else {
+			mTextView.setVisibility(View.VISIBLE);
+			mTextView.setText(getResources().getString(R.string.null_lrc));
+		}
 		return view;
 	}
 
@@ -211,9 +220,13 @@ public class MusicLrcFragment extends Fragment{
 			{
 				mTextView.setVisibility(View.INVISIBLE);
 				Song receiveSong = (Song) intent.getSerializableExtra(BroadCastUtils.CMD_SONG);
-				if(receiveSong != song)
+				if(receiveSong != song && playMusicType == BroadCastUtils.TYPE_ONLINE)
 				{
 					getMusicLrc(Integer.valueOf(receiveSong.getSong_id()));
+				}
+				else if(playMusicType == BroadCastUtils.TYPE_LOCAL)
+				{
+					mTextView.setVisibility(View.VISIBLE);
 				}
 				if(timer != null)
 				{

@@ -22,7 +22,7 @@ public class HttpUtils {
 		return BASE_URL+"baidu.ting.search.catalogSug"+"&query="+query;
 	}
 	
-	public static String getPlayMusicUrl(int songid)
+	public static String getPlayMusicUrl(String songid)
 	{
 		return BASE_URL+"baidu.ting.song.play"+"&songid="+songid;
 	}

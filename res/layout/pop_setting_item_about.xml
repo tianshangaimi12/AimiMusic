@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:padding="10dp"
-    android:background="#FF4500">
+    android:background="@drawable/shape_pop_setting_about">
     <ImageView 
         android:id="@+id/img_pop_setting_about"
         android:layout_alignParentLeft="true"
@@ -19,7 +19,7 @@
         android:layout_marginRight="10dp"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:textSize="30sp"
-        android:textColor="#ffffff"/>
+        android:textSize="24sp"
+        android:textColor="#FF4500"/>
 
 </RelativeLayout>

@@ -22,7 +22,7 @@ public class LocalMusic {
 	                song.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
 	                song.setArtist_name(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
 	                song.setPlayUrl(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-	                song.setFile_duration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)));
+	                song.setFile_duration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))/1000);
 	                song.setSong_id(cursor.getString(cursor.getColumnIndexOrThrow( MediaStore.Audio.Media.TITLE_KEY)));
 	                long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
 	                if (size > 1000 * 800) {
@@ -31,6 +31,11 @@ public class LocalMusic {
 	                        String[] str = song.getTitle().split("-");
 	                        song.setArtist_name(str[0]);
 	                        song.setTitle(str[1]);
+	                    }
+	                    song.setTitle(song.getTitle().trim());
+	                    if (song.getTitle().contains(".")) {
+	                    	String[] str = song.getTitle().split("\\.");
+	                    	song.setTitle(str[0]);
 	                    }
 	                    localSongs.add(song);
 	                }

@@ -174,7 +174,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 	{
 		PopupWindow popupWindow = new PopupWindow(getActivity());
 		popupWindow.setWidth(900);
-		popupWindow.setHeight(500);
+		popupWindow.setHeight(550);
 		View contentView = LayoutInflater.from(getActivity()).inflate(R.layout.pop_setting_item_about, null);
 		ImageView img = (ImageView)contentView.findViewById(R.id.img_pop_setting_about);
 		Glide.with(getActivity())
@@ -187,6 +187,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		popupWindow.setContentView(contentView);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setBackgroundDrawable(null);
+		popupWindow.setAnimationStyle(R.style.PopAnimation);
 		popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 	}
 

@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	private int playMode;
 	private Toast toast;
 	private boolean progressBarDraged;
+	private int playMusicType;
 	
 	private ViewPager mPager;
 	private ImageButton mImgClose;
@@ -90,8 +92,9 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	{
 		Intent intent = getIntent();
 		song = (Song) intent.getSerializableExtra("song");
-		musicCoverFragment = new MusicCoverFragment(song);
-		musicLrcFragment = new MusicLrcFragment(song);
+		playMusicType = intent.getIntExtra(BroadCastUtils.EXTRA_PLAY_MUSIC_TYPE, BroadCastUtils.TYPE_ONLINE);
+		musicCoverFragment = new MusicCoverFragment(song, playMusicType);
+		musicLrcFragment = new MusicLrcFragment(song, playMusicType);
 		fragments = new ArrayList<Fragment>();
 		fragments.add(musicCoverFragment);
 		fragments.add(musicLrcFragment);
@@ -193,17 +196,17 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 			{
 				switchType = SWITCH_PLAY;
 				mImgSwitch.setImageResource(R.drawable.ic_play_btn_pause);
-				sendControll(BroadCastUtils.CMD_PLAY, Integer.valueOf(song.getSong_id()));
+				sendControll(BroadCastUtils.CMD_PLAY, song.getSong_id());
 			}
 			else if(switchType == SWITCH_PLAY)
 			{
 				switchType = SWITCH_PAUSE;
 				mImgSwitch.setImageResource(R.drawable.ic_play_btn_play);
-				sendControll(BroadCastUtils.CMD_PAUSE, 0);
+				sendControll(BroadCastUtils.CMD_PAUSE, "");
 			}
 			break;
 		case R.id.img_play_music_mode:
-			sendControll(BroadCastUtils.CMD_CHANGE_TYPE, 0);
+			sendControll(BroadCastUtils.CMD_CHANGE_TYPE, "");
 			if(playMode == TYPE_CIRCLE)
 			{
 				playMode = TYPE_RANDOM;
@@ -224,10 +227,10 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 			}
 			break;
 		case R.id.img_play_music_previous:
-			sendControll(BroadCastUtils.CMD_PREVIOUS, 0);
+			sendControll(BroadCastUtils.CMD_PREVIOUS, "");
 			break;
 		case R.id.img_play_music_next:
-			sendControll(BroadCastUtils.CMD_NEXT, 0);
+			sendControll(BroadCastUtils.CMD_NEXT, "");
 			break;
 		default:
 			break;
@@ -235,14 +238,15 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 	}
 
 	
-	public void sendControll(int cmdType, int songId)
+	public void sendControll(int cmdType, String songId)
 	{
 		Intent intent = new Intent(BroadCastUtils.MUSIC_SERVICE);
 		intent.putExtra(BroadCastUtils.CMD, cmdType);
-		if(songId != 0)
+		if(!TextUtils.isEmpty(songId))
 		{
 			intent.putExtra(BroadCastUtils.CMD_SONGID, songId);
 		}
+		intent.putExtra(BroadCastUtils.EXTRA_PLAY_MUSIC_TYPE, playMusicType);
 		sendBroadcast(intent);
 	}
 	
@@ -252,6 +256,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int cmd = intent.getIntExtra(BroadCastUtils.CMD, 0);
+			Log.d(TAG, "receive service cmd:"+cmd);
 			if(cmd == BroadCastUtils.CMD_PLAY)
 			{
 				time = 0;
@@ -273,6 +278,7 @@ public class PlayMusicActivity extends FragmentActivity implements OnClickListen
 					song = receiveSong;
 					mTxtTitle.setText(receiveSong.getTitle());
 					mTxtArtist.setText(receiveSong.getArtist_name());
+					mTxtStart.setText(ImgUtils.getMusicTime(0));
 					mTxtEnd.setText(ImgUtils.getMusicTime(receiveSong.getFile_duration()));
 					mSeekBarProgress.setMax(receiveSong.getFile_duration());
 					mSeekBarProgress.setProgress(0);

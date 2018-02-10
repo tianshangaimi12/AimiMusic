@@ -1,5 +1,7 @@
 package com.example.aimimusic.utils;
 
+import android.R.fraction;
+
 public class BroadCastUtils {
 	
 	public final static int CMD_CHANGE_TYPE = 1;
@@ -31,5 +33,11 @@ public class BroadCastUtils {
 	public final static String MUSIC_SERVICE = "aimi.music.service";
 	
 	public final static String SERVICE_CMD = "service_cmd";
+	
+	public final static int TYPE_LOCAL = 1;
+	
+	public final static int TYPE_ONLINE = 2;
+	
+	public final static String EXTRA_PLAY_MUSIC_TYPE = "play_music_type";
 
 }

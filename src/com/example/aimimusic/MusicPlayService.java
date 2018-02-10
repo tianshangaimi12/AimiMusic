@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.IBinder;
+import android.text.style.TtsSpan.ElectronicBuilder;
 import android.util.Log;
 
 public class MusicPlayService extends Service{
@@ -31,10 +32,11 @@ public class MusicPlayService extends Service{
 	private int musicPlaySwitch;
 	private SongList songList;
 	private List<Song> songs;
-	private int songId;
+	private String songId;
 	private int songIndex;
 	private Song song;
 	private MediaPlayer mediaPlayer;
+	private int playMusicType;
 	
 	private final int TYPE_CIRCLE = 1;
 	private final int TYPE_RANDOM = 2;
@@ -51,6 +53,8 @@ public class MusicPlayService extends Service{
 	public void onCreate() {
 		super.onCreate();
 		musicPlayType = TYPE_CIRCLE;
+		playMusicType = BroadCastUtils.TYPE_ONLINE;
+		songId = "";
 		MusicControllReceiver receiver = new MusicControllReceiver();
 		IntentFilter filter = new IntentFilter(BroadCastUtils.MUSIC_SERVICE);
 		registerReceiver(receiver, filter);
@@ -93,7 +97,30 @@ public class MusicPlayService extends Service{
 				intent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_SONG);
 				intent.putExtra(BroadCastUtils.CMD_SONG, song);
 				sendBroadcast(intent);
-				getMusicPlayUrl(Integer.valueOf(song.getSong_id()));
+				if(playMusicType == BroadCastUtils.TYPE_ONLINE)
+				{
+					getMusicPlayUrl(song.getSong_id());
+				}
+				else {
+					mediaPlayer.reset();
+					try {
+						mediaPlayer.setDataSource(song.getPlayUrl());
+						mediaPlayer.prepare();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					mediaPlayer.start();
+					musicPlaySwitch = SWITCH_PLAY;
+					Intent antent = new Intent(BroadCastUtils.SERVICE_CMD);
+					antent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PLAY);
+					sendBroadcast(antent);
+				}
 				
 			}
 		});
@@ -105,6 +132,8 @@ public class MusicPlayService extends Service{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			int cmd = intent.getIntExtra(BroadCastUtils.CMD, 0);
+			Log.d(TAG, "receive activity cmd:"+cmd);
+			playMusicType = intent.getIntExtra(BroadCastUtils.EXTRA_PLAY_MUSIC_TYPE, BroadCastUtils.TYPE_ONLINE);
 			if(cmd == BroadCastUtils.CMD_CHANGE_TYPE)
 			{
 				if(musicPlayType == TYPE_CIRCLE)
@@ -146,7 +175,30 @@ public class MusicPlayService extends Service{
 				preIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_SONG);
 				preIntent.putExtra(BroadCastUtils.CMD_SONG, song);
 				sendBroadcast(preIntent);
-				getMusicPlayUrl(Integer.valueOf(song.getSong_id()));
+				if(playMusicType == BroadCastUtils.TYPE_ONLINE)
+				{
+					getMusicPlayUrl(song.getSong_id());
+				}
+				else {
+					mediaPlayer.reset();
+					try {
+						mediaPlayer.setDataSource(song.getPlayUrl());
+						mediaPlayer.prepare();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					mediaPlayer.start();
+					musicPlaySwitch = SWITCH_PLAY;
+					Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+					aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PLAY);
+					sendBroadcast(aIntent);
+				}
 				
 			}
 			else if(cmd == BroadCastUtils.CMD_NEXT)
@@ -179,16 +231,62 @@ public class MusicPlayService extends Service{
 				preIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_CHANGE_SONG);
 				preIntent.putExtra(BroadCastUtils.CMD_SONG, song);
 				sendBroadcast(preIntent);
-				getMusicPlayUrl(Integer.valueOf(song.getSong_id()));
+				if(playMusicType == BroadCastUtils.TYPE_ONLINE)
+				{
+					getMusicPlayUrl(song.getSong_id());
+				}
+				else {
+					mediaPlayer.reset();
+					try {
+						mediaPlayer.setDataSource(song.getPlayUrl());
+						mediaPlayer.prepare();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					mediaPlayer.start();
+					musicPlaySwitch = SWITCH_PLAY;
+					Intent aIntent = new Intent(BroadCastUtils.SERVICE_CMD);
+					aIntent.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PLAY);
+					sendBroadcast(aIntent);
+				}
 			}
 			else if(cmd == BroadCastUtils.CMD_PLAY)
 			{
-				if(songId != intent.getIntExtra(BroadCastUtils.CMD_SONGID, 0))
+				if(!songId.equals(intent.getStringExtra(BroadCastUtils.CMD_SONGID)))
 				{
-					songId = intent.getIntExtra(BroadCastUtils.CMD_SONGID, 0);
+					songId = intent.getStringExtra(BroadCastUtils.CMD_SONGID);
 					songIndex = getSongIndex(songId);
 					song = songs.get(songIndex);
-					getMusicPlayUrl(songId);
+					if(playMusicType == BroadCastUtils.TYPE_ONLINE)
+					{
+						getMusicPlayUrl(song.getSong_id());
+					}
+					else {
+						mediaPlayer.reset();
+						try {
+							mediaPlayer.setDataSource(song.getPlayUrl());
+							mediaPlayer.prepare();
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						} catch (SecurityException e) {
+							e.printStackTrace();
+						} catch (IllegalStateException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						mediaPlayer.start();
+						musicPlaySwitch = SWITCH_PLAY;
+						Intent intent1 = new Intent(BroadCastUtils.SERVICE_CMD);
+						intent1.putExtra(BroadCastUtils.CMD, BroadCastUtils.CMD_PLAY);
+						sendBroadcast(intent1);
+					}
 				}
 				else 
 				{
@@ -227,12 +325,12 @@ public class MusicPlayService extends Service{
 		
 	}
 	
-	public int getSongIndex(int songId)
+	public int getSongIndex(String songId)
 	{
 		for(int i = 0;i<songs.size();i++)
 		{
 			Song song = songs.get(i);
-			if(Integer.valueOf(song.getSong_id()) == songId)
+			if(song.getSong_id().equals(songId))
 			{
 				return i;
 			}
@@ -240,7 +338,7 @@ public class MusicPlayService extends Service{
 		return 0;
 	}
 	
-	public void getMusicPlayUrl(int songId)
+	public void getMusicPlayUrl(String songId)
 	{
 		String url = HttpUtils.getPlayMusicUrl(songId);
 		Log.d(TAG, "url="+url);

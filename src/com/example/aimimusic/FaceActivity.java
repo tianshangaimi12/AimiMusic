@@ -40,6 +40,7 @@ public class FaceActivity extends Activity{
 						Picasso.with(FaceActivity.this)
 						.load(response)
 						.resize(width, height)
+						.centerCrop()
 						.into(mImageView,new Callback() {
 							
 							@Override
@@ -52,7 +53,7 @@ public class FaceActivity extends Activity{
 										startActivity(intent);
 										FaceActivity.this.finish();
 									}
-								}, 2000);
+								}, 1500);
 							}
 							
 							@Override
